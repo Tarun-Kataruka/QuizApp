@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "852279477057",
+    "project_id": "quizcraft-a776b",
+    "storage_bucket": "quizcraft-a776b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852279477057:android:3725db88a5cd21fde357c0",
+        "android_client_info": {
+          "package_name": "com.example.quizapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkwoPbpyoYsECa-1Y2eLTV4cCEiz1PWIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

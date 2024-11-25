@@ -1,0 +1,19 @@
+<!-- res/navigation/nav_graph.xml -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.quizapp.CategoryFragment"
+        android:label="Home" />
+    <fragment
+        android:id="@+id/nav_leaderboard"
+        android:name="com.example.quizapp.LeaderBoardFragment"
+        android:label="Leaderboard" />
+    <fragment
+        android:id="@+id/nav_account"
+        android:name="com.example.quizapp.AccountFragment"
+        android:label="Account" />
+</navigation>
