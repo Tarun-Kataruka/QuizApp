@@ -3,7 +3,6 @@ package com.example.quizapp;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,14 +11,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.quizapp.Adapters.TestAdapter;
 
 public class TestActivity extends AppCompatActivity {
 
@@ -64,13 +59,27 @@ public class TestActivity extends AppCompatActivity {
         DbQuery.loadTestData(new MyCompleteListener() {
             @Override
             public void onSuccess() {
-                TestAdapter adapter = new TestAdapter(DbQuery.g_testList);
-                testView.setAdapter(adapter);
-                progressDialog.dismiss();
+                DbQuery.loadMyScore(new MyCompleteListener() {
+                    @Override
+                    public void onSuccess() {
+                        TestAdapter adapter = new TestAdapter(DbQuery.g_testList);
+                        testView.setAdapter(adapter);
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        progressDialog.dismiss();
+                        Toast.makeText(TestActivity.this, "Something went wrong! Try again.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
 
             @Override
             public void onFailure() {
+                progressDialog.dismiss();
                 Toast.makeText(TestActivity.this, "Something went wrong! Try again.",
                         Toast.LENGTH_SHORT).show();
             }

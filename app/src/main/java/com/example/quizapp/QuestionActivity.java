@@ -5,6 +5,8 @@ import static com.example.quizapp.DbQuery.NOT_VISITED;
 import static com.example.quizapp.DbQuery.REVIEW;
 import static com.example.quizapp.DbQuery.UNANSWERED;
 import static com.example.quizapp.DbQuery.g_quesList;
+import static com.example.quizapp.DbQuery.g_selected_test_index;
+import static com.example.quizapp.DbQuery.g_testList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +16,6 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,15 +23,15 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
+
+import com.example.quizapp.Adapters.QuestionGridAdapter;
+import com.example.quizapp.Adapters.QuestionsAdapter;
 
 import java.util.concurrent.TimeUnit;
 
@@ -49,6 +50,7 @@ public class QuestionActivity extends AppCompatActivity {
     private ImageView markImage;
     private QuestionGridAdapter gridAdapter;
     private  CountDownTimer timer;
+    private long timeLeft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,7 +240,10 @@ public class QuestionActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     timer.cancel();
                     alertDialog.dismiss();
+
                     Intent intent = new Intent(QuestionActivity.this,ScoreActivity.class);
+                    long totalTime = g_testList.get(g_selected_test_index).getTime()*60*1000;
+                    intent.putExtra("TIME_TAKEN",totalTime-timeLeft);
                     startActivity(intent);
                     QuestionActivity.this.finish();
                 }
@@ -261,6 +266,9 @@ public class QuestionActivity extends AppCompatActivity {
             timer = new CountDownTimer(totalTime+1000,1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
+
+                    timeLeft= millisUntilFinished;
+
                     String time = String.format("%02d : %02d min",
                             TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
                             TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
@@ -272,6 +280,8 @@ public class QuestionActivity extends AppCompatActivity {
                 @Override
                 public void onFinish() {
                     Intent intent = new Intent(QuestionActivity.this,ScoreActivity.class);
+                    long totalTime = g_testList.get(g_selected_test_index).getTime()*60*1000;
+                    intent.putExtra("TIME_TAKEN",totalTime-timeLeft);
                     startActivity(intent);
                     QuestionActivity.this.finish();
                 }

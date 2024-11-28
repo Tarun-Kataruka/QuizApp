@@ -302,6 +302,7 @@
             android:layout_marginRight="16dp"
             android:elevation="5dp"
             android:translationZ="3dp"
+            android:layout_marginBottom="16dp"
             android:stateListAnimator="@null"
             />
     </LinearLayout>
