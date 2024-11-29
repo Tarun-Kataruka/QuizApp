@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,7 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public class AccountFragment extends Fragment {
 
-    private Button logoutB;
+    private LinearLayout logoutB;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,35 +69,20 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
       View view =inflater.inflate(R.layout.fragment_account, container, false);
 
       logoutB = view.findViewById(R.id.logoutB);
 
-//      logoutB.setOnClickListener(new View.OnClickListener() {
-//          @Override
-//          public void onClick(View v) {
-//              FirebaseAuth.getInstance().signOut();
-//             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//              .requestIDToken(getString(R.string.default_web_client_id))
-//                  .requestEmail()
-//                     .build();
-//
-//             GoogleSignInClient mGoogleClient = GoogleSignIn.getClient(getContext(),gso);
-//              mGoogleClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-//                  @Override
-//                  public void onComplete(@NonNull Task<Void> task) {
-//                      Intent intent = new Intent(getContext(), LoginActivity.class);
-//                      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                      startActivity(intent);
-//                      getActivity().finish();
-//                  }
-//              });
-//          }
-//      });
-
+      logoutB.setOnClickListener((v) -> {
+              FirebaseAuth.getInstance().signOut();
+                      Intent intent = new Intent(getContext(), LoginActivity.class);
+                      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                      startActivity(intent);
+                      getActivity().finish();
+      });
       return view;
     }
 }
