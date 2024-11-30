@@ -15,8 +15,11 @@
         android:theme="@style/Theme.QuizApp"
         tools:targetApi="31">
         <activity
-            android:name=".ScoreActivity"
+            android:name=".MyProfileActivity"
             android:exported="false" />
+        <activity
+            android:name=".ScoreActivity"
+            android:exported="true" />
         <activity
             android:name=".StartTestActivity"
             android:exported="true" />

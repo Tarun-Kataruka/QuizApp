@@ -1,4 +1,4 @@
-package com.example.quizapp.Adapters;
+package com.example.quizapp;
 
 import android.os.Bundle;
 
@@ -8,10 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.Toolbar;
 
-import com.example.quizapp.CategoryAdapter;
-import com.example.quizapp.DbQuery;
-import com.example.quizapp.R;
+import com.example.quizapp.Adapters.CategoryAdapter;
 
 public class CategoryFragment extends Fragment {
 
@@ -31,6 +30,8 @@ public class CategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_category, container, false);
+//        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+//        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Categories");
 
         catView = view.findViewById(R.id.cat_Grid);
 

@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.quizapp.Adapters.CategoryFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: Started");
         super.onCreate(savedInstanceState);
 
         // Inflate the binding
@@ -68,6 +66,10 @@ public class MainActivity extends AppCompatActivity
         } else {
             Log.e(TAG, "onCreate: Toolbar is null");
         }
+
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        getSupportActionBar().setTitle("Categories");
 
         // Initialize BottomNavigationView and FrameLayout
         bottomNavigationView = findViewById(R.id.bottom_nav_bar);

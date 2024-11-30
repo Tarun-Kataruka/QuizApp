@@ -1,5 +1,6 @@
 package com.example.quizapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,22 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AccountFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AccountFragment extends Fragment {
 
     private LinearLayout logoutB;
+    private TextView profile_img_text, name;
+    private LinearLayout leaderB, profileB, bookmarkB;
+    private BottomNavigationView bottomNavigationView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,9 +39,11 @@ public class AccountFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+
     public AccountFragment() {
         // Required empty public constructor
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -68,13 +72,20 @@ public class AccountFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-      View view =inflater.inflate(R.layout.fragment_account, container, false);
 
-      logoutB = view.findViewById(R.id.logoutB);
+      View view =inflater.inflate(R.layout.fragment_account, container, false);
+        logoutB = view.findViewById(R.id.logoutButton);
+
+        initViews(view);
+        String userName = DbQuery.myProfile.getName();
+        profile_img_text.setText(userName.toUpperCase().substring(0,1));
+        name.setText(userName);
+
+
 
       logoutB.setOnClickListener((v) -> {
               FirebaseAuth.getInstance().signOut();
@@ -83,6 +94,41 @@ public class AccountFragment extends Fragment {
                       startActivity(intent);
                       getActivity().finish();
       });
+
+      bookmarkB.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+
+          }
+      });
+
+      profileB.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Intent intent = new Intent(getContext(), MyProfileActivity.class);
+            startActivity(intent);
+          }
+      });
+
+      leaderB.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              bottomNavigationView.setSelectedItemId(R.id.nav_leaderboard);
+          }
+      });
+
       return view;
+    }
+
+
+    private void initViews(View view)
+    {
+        logoutB = view.findViewById(R.id.logoutButton);
+        profile_img_text=view.findViewById(R.id.profile_img_text);
+        name=view.findViewById(R.id.name);
+        leaderB=view.findViewById(R.id.leaderboardB);
+        bookmarkB=view.findViewById(R.id.bookmarkB);
+        profileB=view.findViewById(R.id.profileButton);
+        bottomNavigationView= getActivity().findViewById(R.id.bottom_nav_bar);
     }
 }
