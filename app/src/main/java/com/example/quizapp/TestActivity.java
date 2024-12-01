@@ -41,7 +41,7 @@ public class TestActivity extends AppCompatActivity {
 
         testView = findViewById(R.id.test_recycler_view);
 
-         progressDialog = new Dialog(TestActivity.this);
+        progressDialog = new Dialog(TestActivity.this);
         progressDialog.setContentView(R.layout.dialog_layout);
         progressDialog.setCancelable(false);
         progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
