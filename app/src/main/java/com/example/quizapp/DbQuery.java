@@ -32,10 +32,11 @@ public class DbQuery {
     public static FirebaseFirestore g_firestore;
     public static List<CategoryModel> g_catList = new ArrayList<>();
     public static int g_selected_cat_index = 0;
+    public static List<String>g_bmIdList = new ArrayList<>();
     public static List<QuestionModel> g_quesList = new ArrayList<>();
     public static List<TestModel> g_testList = new ArrayList<>();
     public static int g_selected_test_index = 0;
-    public static ProfileModel myProfile = new ProfileModel("NA", null,null);
+    public static ProfileModel myProfile = new ProfileModel("NA", null,null,0);
     public static List<RankModel> g_usersList = new ArrayList<>();
     public static int g_usersCount = 0;
     public static boolean isMeOnTopList = false;
@@ -50,6 +51,7 @@ public class DbQuery {
         userData.put("EMAIL_ID", email);
         userData.put("NAME", name);
         userData.put("TOTAL_SCORE", 0);
+        userData.put("BOOKMARKS",0);
 
         DocumentReference userDoc = g_firestore.collection("USERS").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
@@ -109,6 +111,10 @@ public class DbQuery {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         myProfile.setName(documentSnapshot.getString("NAME"));
                         myProfile.setEmail(documentSnapshot.getString("EMAIL_ID"));
+                        if(documentSnapshot.get("BOOKMARKS")!= null)
+                        {
+                            myProfile.setBmCount(documentSnapshot.getLong("BOOKMARKS").intValue());
+                        }
 
                         if(documentSnapshot.getString("PHONE")!= null)
                         {
@@ -144,6 +150,32 @@ public class DbQuery {
                                 top=documentSnapshot.getLong(g_testList.get(i).getTestID()).intValue();
                             }
                             g_testList.get(i).setTopScore(top);
+                        }
+                        completeListener.onSuccess();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        completeListener.onFailure();
+                    }
+                });
+    }
+
+    public static void loadBmIds(MyCompleteListener completeListener)
+    {
+        g_bmIdList.clear();
+        g_firestore.collection("USERS").document(FirebaseAuth.getInstance().getUid())
+                .collection("USER_DATA").document("BOOKMARKS")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        int count = myProfile.getBmCount();
+                        for(int i=0; i<count; i++)
+                        {
+                            String bmID = documentSnapshot.getString("BM"+ String.valueOf(i+1)+"_ID");
+                            g_bmIdList.add(bmID);
                         }
                         completeListener.onSuccess();
                     }
@@ -223,9 +255,27 @@ public class DbQuery {
     {
         WriteBatch batch = g_firestore.batch();
 
+        Map<String,Object> bmData = new ArrayMap<>();
+        for(int i=0; i<g_bmIdList.size();i++)
+        {
+            bmData.put("BM"+ String.valueOf(i+1)+"_ID",g_bmIdList.get(i));
+        }
+
+        DocumentReference bmDoc = g_firestore.collection("USERS")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("USERS_DATA.")
+                .document("BOOKMARKS");
+
+        batch.set(bmDoc,bmData);
+
         DocumentReference userDoc = g_firestore.collection("USERS").document(FirebaseAuth.getInstance().getUid());
 
-        batch.update(userDoc,"TOTAL_SCORE",score);
+        Map<String,Object> userData = new ArrayMap<>();
+        userData.put("TOTAL_SCORE",score);
+        userData.put("BOOKMARKS",g_bmIdList.size());
+
+        batch.update(userDoc,userData);
+
 
         if(score > g_testList.get(g_selected_test_index).getTopScore())
         {
@@ -336,7 +386,13 @@ public class DbQuery {
 //                            Long answerLong = doc.getLong("ANSWER");
 //                            int answer = (answerLong != null) ? answerLong.intValue() : -1;
 
+                            boolean isBookMarked = false;
+                            if(g_bmIdList.contains(doc.getId())) {
+                                isBookMarked = true;
+                            }
+
                             g_quesList.add(new QuestionModel(
+                                    doc.getId(),
                                     doc.getString("QUESTION"),
                                     doc.getString("A"),
                                     doc.getString("B"),
@@ -344,7 +400,8 @@ public class DbQuery {
                                     doc.getString("D"),
                                     doc.getLong("ANSWER").intValue(),
                                     -1,
-                                    NOT_VISITED
+                                    NOT_VISITED,
+                                    isBookMarked
                             ));
                         }
                         completeListener.onSuccess();
@@ -365,7 +422,18 @@ public class DbQuery {
                 getUserData(new MyCompleteListener() {
                     @Override
                     public void onSuccess() {
-                        getUsersCount(completeListener);
+                        getUsersCount(new MyCompleteListener() {
+                            @Override
+                            public void onSuccess() {
+                                loadBmIds(completeListener);
+                            }
+
+                            @Override
+                            public void onFailure() {
+                                completeListener.onFailure();
+                            }
+                        });
+
                     }
 
                     @Override

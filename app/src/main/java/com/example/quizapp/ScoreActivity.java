@@ -1,8 +1,10 @@
 package com.example.quizapp;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,6 +18,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.quizapp.Models.QuestionModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.concurrent.TimeUnit;
 
 public class ScoreActivity extends AppCompatActivity {
@@ -26,6 +31,7 @@ public class ScoreActivity extends AppCompatActivity {
     private Dialog progressDialog;
     private TextView dialogText;
     private int finalScore;
+    private BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +56,9 @@ public class ScoreActivity extends AppCompatActivity {
 
         loadData();
 
-        saveResult();
+        setBookMarks();
 
+        saveResult();
     }
 
     private void init(){
@@ -118,6 +125,29 @@ public class ScoreActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }
         });
+    }
+
+    private void setBookMarks()
+    {
+        for(int i=0; i<DbQuery.g_quesList.size(); i++)
+        {
+            QuestionModel question = DbQuery.g_quesList.get(i);
+            if(question.isBookMarked())
+            {
+                if (! DbQuery.g_bmIdList.contains(question.getqID()))
+                {
+                    DbQuery.g_bmIdList.add(question.getqID());
+                    DbQuery.myProfile.setBmCount(DbQuery.g_bmIdList.size());
+                }
+            }
+            else {
+                if(DbQuery.g_bmIdList.contains(question.getqID()))
+                {
+                    DbQuery.g_bmIdList.remove(question.getqID());
+                    DbQuery.myProfile.setBmCount(DbQuery.g_bmIdList.size());
+                }
+            }
+        }
     }
 
     @Override

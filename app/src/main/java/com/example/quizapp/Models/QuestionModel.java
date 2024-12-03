@@ -9,8 +9,10 @@ public class QuestionModel {
     private int correctAns;
     private int selectedAns;
     private int status;
+    private boolean isBookMarked;
+    private String qID;
 
-    public QuestionModel(String question, String optionA, String optionB, String optionC, String optionD, int correctAns, int selectedAns,int status) {
+    public QuestionModel(String qID,String question, String optionA, String optionB, String optionC, String optionD, int correctAns, int selectedAns,int status, boolean isBookMarked) {
         this.question = question;
         this.optionA = optionA;
         this.optionB = optionB;
@@ -19,6 +21,24 @@ public class QuestionModel {
         this.correctAns = correctAns;
         this.selectedAns=selectedAns;
         this.status=status;
+        this.isBookMarked=isBookMarked;
+        this.qID=qID;
+    }
+
+    public String getqID() {
+        return qID;
+    }
+
+    public void setqID(String qID) {
+        this.qID = qID;
+    }
+
+    public boolean isBookMarked() {
+        return isBookMarked;
+    }
+
+    public void setBookMarked(boolean bookMarked) {
+        isBookMarked = bookMarked;
     }
 
     public int getStatus() {

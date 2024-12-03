@@ -1,6 +1,8 @@
 package com.example.quizapp;
 
 import static com.example.quizapp.DbQuery.g_catList;
+import static com.example.quizapp.DbQuery.g_selected_test_index;
+import static com.example.quizapp.DbQuery.g_testList;
 import static com.example.quizapp.DbQuery.loadQuestions;
 
 import android.app.Dialog;
